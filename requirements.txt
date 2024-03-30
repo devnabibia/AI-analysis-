@@ -1,0 +1,10 @@
+llama-index
+# tiktoken
+# langchain
+python-dotenv
+flask
+# requests
+html2text
+# langchain_community
+llama-cpp-python
+

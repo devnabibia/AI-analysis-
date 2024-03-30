@@ -1,0 +1,31 @@
+name: Push-to-DEMO-EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy to EC2 on master branch push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Create env config file
+        run: |          
+          python3 -c "import os; file = open('code/.env', 'w'); file.write(os.environ['ENV_CONFIG']); file.close()"
+        shell: bash
+        env:
+          ENV_CONFIG : ${{secrets.ENV_CONFIG}}
+    
+      - name: Deploy to AWS EC2
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_HOST: ${{ secrets.DEMO_REMOTE_HOST }}
+          TARGET: ${{ vars.TARGET }}
+
